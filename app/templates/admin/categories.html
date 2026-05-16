@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Categories · Admin{% endblock %}
+{% block content %}
+<h1>Categories</h1>
+
+<div class="card narrow">
+  <h2>Add new</h2>
+  <form method="post" class="upload-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input class="input" type="text" name="name" placeholder="e.g. Documents" required>
+    <button class="btn primary" type="submit">Add</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Existing</h2>
+  {% if categories %}
+    <ul class="links">
+      {% for c in categories %}<li>{{ c.name }}</li>{% endfor %}
+    </ul>
+  {% else %}
+    <p class="muted">No categories yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

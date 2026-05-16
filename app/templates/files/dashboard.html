@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}My files · CloudStore{% endblock %}
+{% block content %}
+<div class="row">
+  <h1>My files</h1>
+  <div class="muted">Used: {{ '%.1f'|format(storage_used / 1024 / 1024) }} MB</div>
+</div>
+
+<div class="card">
+  <h2>Upload a file</h2>
+  <form method="post" action="{{ url_for('files.upload') }}" enctype="multipart/form-data" class="upload-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <input class="input" type="file" name="file" required>
+    {% if categories %}
+      <select class="input" name="category_id">
+        <option value="">— No category —</option>
+        {% for c in categories %}
+          <option value="{{ c.id }}">{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    {% endif %}
+    <button class="btn primary" type="submit">Upload</button>
+  </form>
+</div>
+
+<div class="card">
+  <h2>Your files</h2>
+  {% if files %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th><th>Size</th><th>Type</th><th>Category</th><th>Uploaded</th><th></th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for f in files %}
+        <tr>
+          <td>{{ f.original_name }}</td>
+          <td>{{ f.human_size() }}</td>
+          <td class="muted">{{ f.mime_type or '—' }}</td>
+          <td>{{ f.category.name if f.category else '—' }}</td>
+          <td class="muted">{{ f.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td class="actions">
+            <a class="btn small" href="{{ url_for('files.download', file_id=f.id) }}">Download</a>
+            <form method="post" action="{{ url_for('files.delete', file_id=f.id) }}" style="display:inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <button class="btn small danger" type="submit"
+                      onclick="return confirm('Delete {{ f.original_name }}?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">No files yet — upload your first one above.</p>
+  {% endif %}
+</div>
+{% endblock %}

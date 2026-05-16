@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}All files · Admin{% endblock %}
+{% block content %}
+<h1>All files</h1>
+<div class="card">
+  {% if files %}
+    <table class="table">
+      <thead>
+        <tr><th>Name</th><th>Owner</th><th>Size</th><th>Category</th><th>Uploaded</th><th></th></tr>
+      </thead>
+      <tbody>
+      {% for f in files %}
+        <tr>
+          <td>{{ f.original_name }}</td>
+          <td>{{ f.owner.username }}</td>
+          <td>{{ f.human_size() }}</td>
+          <td>{{ f.category.name if f.category else '—' }}</td>
+          <td class="muted">{{ f.uploaded_at.strftime('%Y-%m-%d %H:%M') }}</td>
+          <td class="actions">
+            <a class="btn small" href="{{ url_for('files.download', file_id=f.id) }}">Download</a>
+            <form method="post" action="{{ url_for('files.delete', file_id=f.id) }}" style="display:inline">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+              <input type="hidden" name="from" value="admin">
+              <button class="btn small danger" type="submit"
+                      onclick="return confirm('Delete {{ f.original_name }}?')">Delete</button>
+            </form>
+          </td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p class="muted">No files have been uploaded yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

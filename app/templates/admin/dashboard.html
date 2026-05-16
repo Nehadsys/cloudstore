@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Admin · CloudStore{% endblock %}
+{% block content %}
+<h1>Admin dashboard</h1>
+<div class="stats">
+  <div class="stat"><div class="num">{{ user_count }}</div><div class="lbl">Users</div></div>
+  <div class="stat"><div class="num">{{ file_count }}</div><div class="lbl">Files</div></div>
+  <div class="stat"><div class="num">{{ '%.1f'|format(total_bytes / 1024 / 1024) }} MB</div><div class="lbl">Total storage</div></div>
+</div>
+
+<div class="card">
+  <h2>Manage</h2>
+  <ul class="links">
+    <li><a href="{{ url_for('admin.users') }}">Users</a></li>
+    <li><a href="{{ url_for('admin.files') }}">All files</a></li>
+    <li><a href="{{ url_for('admin.categories') }}">Categories</a></li>
+  </ul>
+</div>
+{% endblock %}

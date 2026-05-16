@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Log in · CloudStore{% endblock %}
+{% block content %}
+<div class="card narrow">
+  <h1>Log in</h1>
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="field">
+      {{ form.email.label }}
+      {{ form.email(class_="input") }}
+      {% for e in form.email.errors %}<div class="err">{{ e }}</div>{% endfor %}
+    </div>
+    <div class="field">
+      {{ form.password.label }}
+      {{ form.password(class_="input") }}
+      {% for e in form.password.errors %}<div class="err">{{ e }}</div>{% endfor %}
+    </div>
+    <label class="checkbox">{{ form.remember() }} Remember me</label>
+    {{ form.submit(class_="btn primary") }}
+  </form>
+  <p class="muted">No account? <a href="{{ url_for('auth.signup') }}">Sign up</a>.</p>
+</div>
+{% endblock %}
